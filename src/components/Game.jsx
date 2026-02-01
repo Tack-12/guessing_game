@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import "./Game.css";
 
 export default function Game() {
   const url = "https://pokeapi.co/api/v2/pokemon/";
@@ -24,21 +25,27 @@ export default function Game() {
     };
 
     fetchData();
+  }, [url]);
+
+  useEffect(() => {
+    setPokemon(pokemons.sort(() => Math.random() - 0.5));
   }, [score]);
 
   function clicked(id) {
-    const temp = [];
-    if (!pressed.includes.id) {
-      if (score > bestscore) {
+    console.log("This has been called with ", id);
+    console.log(pressed);
+    if (!pressed.includes(id)) {
+      if (score >= bestscore) {
         setBestscore(score);
       }
       if (score == 15) {
-        setScore(score + 1);
+        setScore("You Win");
       }
-      temp.push(id);
-      setPressed(temp);
+      setScore(score + 1);
+      setPressed((prevItem) => [...prevItem, id]);
     } else {
       setScore(0);
+      setPressed([]);
     }
   }
 
@@ -47,19 +54,19 @@ export default function Game() {
       <div>
         Score: {score} BestScore:{bestscore}
       </div>
-      <div>
+      <div className="Main">
         {pokemons.map((data) => {
           return (
-            <div
-              key={data.id}
-              onClick={() => {
-                clicked(data.id);
-              }}
-              className="divs"
-            >
-              <img src={data.sprites.front_default} alt="" />
-              <div>{data.name}</div>
-            </div>
+              <div
+                key={data.id}
+                onClick={() => {
+                  clicked(data.id);
+                }}
+                className="divs"
+              >
+                <img src={data.sprites.front_default} alt="" />
+                <div>{data.name}</div>
+              </div>
           );
         })}
       </div>
